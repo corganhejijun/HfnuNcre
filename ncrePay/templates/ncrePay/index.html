@@ -1,0 +1,59 @@
+<!DOCTYPE html>  
+{% load bootstrap3  %} 
+{% load staticfiles %} 
+<html lang="en">  
+<head>  
+    <meta charset="utf-8">  
+    <title>NCRE审核系统</title>  
+    <meta name="description" content="">  
+    <link rel="stylesheet" type="text/css" href="{% static 'ncrePay/bootstrap.min.css' %}" /> 
+    <script type="text/javascript" src="{% static 'ncrePay/jquery-2.2.4.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'ncrePay/bootstrap.min.js' %}"></script>
+    <style type="text/css">
+    </style>
+    <script type="text/javascript">
+    function dic2Html(json){
+        html = "<td class='text-center'>" + json['candidateNum'] + "</td>"
+            + "<td class='text-center'>" + json['name'] + "</td>"
+            + "<td class='text-center'>"
+            + "<input type='submit' class='btn btn-default' name='detail'" + json['id'] + "' value='查看'>"
+            + "</td>";
+        return html;
+    }
+    $(document).ready(function(){
+        var $form = $('form.candidates');
+        var url = location.protocol + "//" + window.location.hostname + ":"
+                  + location.port + "/index/?target=1";
+        $.getJSON(url, {}, function(json){
+            for (var i = 0; i < json.length; i++){
+                $('#candidateList').append("<tr id='candidate" + i + "'></tr>")
+                $('#candidate' + i).html(dic2Html(json[i]));
+            }
+        });
+    });
+    </script>
+</head>
+<body>
+    <div class="container" style="max-width: 1000px">
+        <h2>登录系统</h2>
+        <form role="form" method="post">
+            {% csrf_token %}
+            <button type="submit" name="logout" class="btn btn-primary navbar-btn pull-right">注销</button>
+        </form>
+        <form role="form" class="candidates" method="post" style="">
+            {% csrf_token %}
+            <table class="table table-borderd table-hover table-striped" id="candidateList">
+                <thead>
+                    <tr>
+                        <th class='text-center'>报名号</th>
+                        <th class='text-center'>姓名</th>
+                        <th class='text-center'>查看</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </form>
+    </div>
+</body>
+</html>

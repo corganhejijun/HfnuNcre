@@ -1,0 +1,45 @@
+<!DOCTYPE html>  
+{% load bootstrap3  %} 
+{% load staticfiles %} 
+<html lang="en">  
+<head>  
+    <meta charset="utf-8">  
+    <title>登录系统</title>  
+    <meta name="description" content="">  
+    <link rel="stylesheet" type="text/css" href="{% static 'ncrePay/bootstrap.min.css' %}" /> 
+    <script type="text/javascript" src="{% static 'ncrePay/jquery-2.2.4.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'ncrePay/bootstrap.min.js' %}"></script>
+    <script type="text/javascript">
+    </script>
+</head>
+<body>
+    <div class="container" style="max-width: 1000px">
+        {% if errorMsg %}
+            <div class="alert alert-danger">
+                <h4>{{errorMsg}}</h4>
+            </div>
+        {% endif %}
+        <h2>登录系统</h2>
+        <div class="well">
+            <form class="form" method="post">
+                {% csrf_token %}
+                <label for="inputName" class="control-label">用户名</label>
+                <input type="text" pattern="^[A-z0-9]{6,}$" maxlength="24" class="form-control" id="inputName" 
+                    name="username" required placeholder="请输入用户名"
+                    {% if messages %}{% for message in messages %}{% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}value={{message}}{% endif %}{% endfor %}{% endif %}>
+                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                <div class="help-block with-errors"></div>
+                <div class="form-group">
+                    <label for="inputPsw" class="control-label">密码</label>
+                    <input type="password" data-minlength="6" maxlength="64" class="form-control" id="inputPsw" 
+                        name="password" required placeholder="请输入登录密码">
+                    <div class="help-block with-errors"></div>
+                </div>
+                <p class="form-actions">  
+                    <input type="submit" value="登录" class="btn btn-primary">  
+                </p>  
+            </form>
+        </div>
+    </div>
+</body>
+</html>
