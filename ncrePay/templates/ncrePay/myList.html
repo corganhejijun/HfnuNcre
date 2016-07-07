@@ -1,0 +1,71 @@
+<!DOCTYPE html>  
+{% load bootstrap3  %} 
+{% load staticfiles %} 
+<html lang="en">  
+<head>  
+    <meta charset="utf-8">  
+    <title>我的审核</title>  
+    <meta name="description" content="">  
+    <link rel="stylesheet" type="text/css" href="{% static 'ncrePay/bootstrap.min.css' %}" /> 
+    <script type="text/javascript" src="{% static 'ncrePay/jquery-2.2.4.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'ncrePay/bootstrap.min.js' %}"></script>
+    <script type="text/javascript">
+    $(document).ready(function(){
+        $('#checkCandidate').on('show.bs.modal', function (e) {
+            var button = e.relatedTarget;
+            var candidateId = button.id;
+            var url = location.protocol + "//" + window.location.hostname + ":"
+                      + location.port + "/myList/?target=" + candidateId;
+            $.getJSON(url, {}, function(json){
+                document.getElementById('candidateName').innerHTML = "考生姓名：" + json['name'] + " 报名号：" + json['candidateNum'];
+                document.getElementById('candidatePhone').innerHTML = "电话：" + json['phone'] + " 身份证号码：" + json['id'];
+                document.getElementById('candidateTestName').innerHTML = json['testName'];
+                document.getElementById('candidatePhoto').src = json['photo'];
+            });
+        });
+    });
+    </script>
+</head>
+<body>
+    <div class="container" style="max-width: 1000px">
+        <h2>当前用户: {{username}}</h2>
+        <a href="/index"><input type="button" class="btn btn-primary navbar-btn pull-right" value="返回" name=""></a>
+        <form role="form" class="myList" method="post">
+            <table class="table table-borderd table-hover table-striped" id="candidateList">
+                <thead>
+                    <tr>
+                        <th class="text-center">报名号</th>
+                        <th class="text-center">姓名</th>
+                        <th class="text-center">处理</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in list %}
+                        <td class="text-center">{{item.candidate.candidateNum}}</td>
+                        <td class="text-center">{{item.candidate.name}}</td>
+                        <td class="text-center"><a href="#checkCandidate" data-toggle="modal" 
+                            id='{{item.candidate.id}}' class="userCheckButton btn btn-primary" role="button">查看</a></td>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <!-- Modal -->
+            <div class="modal fade" id="checkCandidate" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div id="candidateInfo" class="modal-body">
+                            <h4 id="candidateName"></h4>
+                            <p id="candidatePhone"></p>
+                            <p id="candidateTestName"></p>
+                            <img id="candidatePhoto" src="">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            <button id="submitUserCheck" type="submit" class="btn btn-primary">确定</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

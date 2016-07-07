@@ -1,12 +1,16 @@
 manage.py shell
+
+
 from ncrePay.models import Candidate
 import csv
 csvFile = file('ncrePay/candidate.csv', 'rb')
 csvReader = csv.reader(csvFile)
+
+
 for line in csvReader:
     if csvReader.line_num == 1:
         continue
-    list = Candidate.objects.filter(candidateNum=line[2])
+    list = Candidate.objects.filter(candidateNum=line[2], testCode=line[16])
     if list:
         continue
     print 'add' + line[2]
@@ -27,4 +31,6 @@ for line in csvReader:
     can.testBeginTime = line[32]
     can.testEndTime = line[33]
     can.save()
+
+
 csvFile.close()

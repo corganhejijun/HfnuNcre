@@ -19,6 +19,8 @@ from ncrePay import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', views.login, name='login'),
+    url(r'^login/$', views.login, name='login'),
     url(r'^index/$', views.index, name='index'),
+    url(r'^myList/$', views.myList, name='myList'),
+    url(r'^$', views.apply, name='apply')
 ]

@@ -27,8 +27,6 @@
                 <input type="text" pattern="^[A-z0-9]{6,}$" maxlength="24" class="form-control" id="inputName" 
                     name="username" required placeholder="请输入用户名"
                     {% if messages %}{% for message in messages %}{% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}value={{message}}{% endif %}{% endfor %}{% endif %}>
-                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-                <div class="help-block with-errors"></div>
                 <div class="form-group">
                     <label for="inputPsw" class="control-label">密码</label>
                     <input type="password" data-minlength="6" maxlength="64" class="form-control" id="inputPsw" 

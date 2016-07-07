@@ -1,0 +1,56 @@
+<!DOCTYPE html>  
+{% load bootstrap3  %} 
+{% load staticfiles %} 
+<html lang="en">  
+<head>  
+    <meta charset="utf-8">  
+    <title>NCRE审核系统</title>  
+    <meta name="description" content="">  
+    <link rel="stylesheet" type="text/css" href="{% static 'ncrePay/bootstrap.min.css' %}" /> 
+    <script type="text/javascript" src="{% static 'ncrePay/jquery-2.2.4.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'ncrePay/bootstrap.min.js' %}"></script>
+    <style type="text/css">
+    </style>
+    <script type="text/javascript">
+    </script>
+</head>
+<body>
+    <div class="container" style="max-width: 1000px">
+        {% if successMsg %}
+        <div class="alert alert-success">
+            <h4>{{successMsg}}</h4>
+        </div>
+        <a href="http://jdjks.hftc.edu.cn/"><input type="button" value="返回主页" class="btn btn-success"></a>  
+        {% endif %}
+        {% if errorMsg %}
+            <div class="alert alert-danger">
+                <h4>{{errorMsg}}</h4>
+            </div>
+        {% endif %}
+        <h2>请输入姓名及身份证号码查询审核状态</h2>
+        <div class="well">
+            <form class="form" method="post">
+                {% csrf_token %}
+                <label for="name" class="control-label">姓名</label>
+                <input type="text" name="name" required placeholder="请输入姓名" class="form-control" {% if name %}value="{{name}}"{% endif %}>
+                <label for="id" class="control-label">身份证号码</label>
+                <input type="text" name="id" required placeholder="请输入身份证号码" data-minlength="11" class="form-control"
+                    {% if id %}value="{{id}}"{% endif %}>
+                <p class="form-actions">  
+                    <input type="submit" value="查询" class="btn btn-primary">  
+                </p>  
+                {% if list %}
+                    <h2>共查询到{{len}}条记录</h2>
+                    {% for item in list %}
+                        <h4>报考科目:{{item.testName}}</h4>
+                    {% endfor %}
+                    <h2>(缴费标准80元每门)共需缴费：<font color="red">{{pay}}</font>元</h2>
+                    <label for="email" class="control-label">电子邮箱：(人工审核报名信息的结果及网上支付方式将通过邮件发送，请及时查看)</label>
+                    <input type="text" name="email" required placeholder="请输入邮箱地址" class="form-control" >
+                    <input type="submit" name="payFee" value="申请审核" class="btn btn-danger">
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</body>
+</html>
