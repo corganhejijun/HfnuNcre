@@ -2,6 +2,7 @@ from .LoginForm import LoginForm
 from .CandidateForm import CandidateForm
 from .ApplyForm import ApplyForm
 from .MyListForm import MyListForm
+from .CandidateOkForm import CandidateOkForm
 
 
 def login(request):
@@ -37,4 +38,13 @@ def myList(request):
         return form.get(request)
     if request.method == 'POST':
         form = MyListForm(request.POST)
+        return form.post(request)
+
+
+def candidateOk(request):
+    if request.method == 'GET':
+        form = CandidateOkForm(request.GET)
+        return form.get(request)
+    if request.method == 'POST':
+        form = CandidateOkForm(request.POST)
         return form.post(request)

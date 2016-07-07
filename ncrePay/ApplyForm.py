@@ -2,10 +2,6 @@
 from django import forms
 from django.shortcuts import render
 
-from smtplib import SMTP_SSL
-from email.header import Header
-from email.mime.text import MIMEText
-
 from .models import Candidate, Apply
 
 
