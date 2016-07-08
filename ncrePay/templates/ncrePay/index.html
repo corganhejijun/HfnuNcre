@@ -15,6 +15,7 @@
     function dic2Html(json){
         html = "<td class='text-center'>" + json['candidateNum'] + "</td>"
             + "<td class='text-center'>" + json['name'] + "</td>"
+            + "<td class='text-center'>" + json['email'] + "</td>"
             + "<td class='text-center'>"
             + "<input type='submit' class='btn btn-default' name='accept" + json['id'] + "' value='接单'>"
             + "</td>";
@@ -36,6 +37,7 @@
     <div class="container" style="max-width: 1000px">
         <h2>当前用户：{{username}}</h2>
         <a href="{% url 'myList' %}"><input type="button" value="我接的单" class="btn btn-success navbar-btn pull-left"></a>
+        <a href="{% url 'successList' %}"><input type="button" value="我处理过的单" class="btn btn-primary navbar-btn pull-left" style="margin: 8px 0px 0px 10px"></a>
         <form role="form" method="post">
             {% csrf_token %}
             <button type="submit" name="logout" class="btn btn-primary navbar-btn pull-right">注销</button>
@@ -47,6 +49,7 @@
                     <tr>
                         <th class='text-center'>报名号</th>
                         <th class='text-center'>姓名</th>
+                        <th class="text-center">邮件</th>
                         <th class='text-center'>处理</th>
                     </tr>
                 </thead>

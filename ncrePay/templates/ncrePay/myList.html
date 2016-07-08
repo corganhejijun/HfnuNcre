@@ -16,7 +16,10 @@
             var candidateId = button.id;
             var url = location.protocol + "//" + window.location.hostname + ":"
                       + location.port + "{% url 'myList' %}?target=" + candidateId;
+
+            {% if not success %}
             document.getElementById('submitUserCheck').name = candidateId;
+            {% endif %}
             $.getJSON(url, {}, function(json){
                 document.getElementById('candidateName').innerHTML = "考生姓名：" + json['name'] + " 报名号：" + json['candidateNum'];
                 document.getElementById('candidatePhone').innerHTML = "电话：" + json['phone'] + " 身份证号码：" + json['id'];
@@ -44,15 +47,22 @@
                     <tr>
                         <th class="text-center">报名号</th>
                         <th class="text-center">姓名</th>
+                        <th class="text-center">状态</th>
+                        <th class="text-center">邮件</th>
                         <th class="text-center">处理</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for item in list %}
+                    <tr>
                         <td class="text-center">{{item.candidate.candidateNum}}</td>
                         <td class="text-center">{{item.candidate.name}}</td>
+                        <td class="text-center">{{item.status}}</td>
+                        <td class="text-center">{{item.email}}</td>
                         <td class="text-center"><a href="#checkCandidate" data-toggle="modal" 
-                            id='accept{{item.candidate.id}}' class="userCheckButton btn btn-primary" role="button">查看</a></td>
+                            id='accept{{item.candidate.id}}' class="userCheckButton btn btn-primary" role="button">查看</a>
+                        </td>
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>
@@ -78,10 +88,12 @@
                             <input type="text" class="form-control" id="otherError" name="otherError">
                             <div class="help-block with-errors"></div>
                         </div>
+                        {% if not success %}
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                             <button id="submitUserCheck" type="submit" class="btn btn-primary">确定</button>
                         </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>

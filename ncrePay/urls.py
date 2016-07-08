@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^login/$', views.login, name='login'),
     url(r'^index/$', views.index, name='index'),
     url(r'^myList/$', views.myList, name='myList'),
+    url(r'^successList/$', views.successList, name='successList'),
     url(r'^$', views.apply, name='apply'),
     url(r'^candidateOk/$', views.candidateOk, name='candidateOk')
 ]

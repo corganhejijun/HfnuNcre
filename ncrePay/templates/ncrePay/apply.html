@@ -28,6 +28,9 @@
             </div>
         {% endif %}
         <h2>请输入姓名及身份证号码查询审核状态</h2>
+        {% if list %}
+            <a href="{% url 'apply' %}"><input type="button" class="btn btn-primary" value="返回" name=""></a>
+        {% endif %}
         <div class="well">
             <form class="form" method="post">
                 {% csrf_token %}
@@ -45,7 +48,8 @@
                         <h4>报考科目:{{item.testName}}</h4>
                     {% endfor %}
                     <h2>(缴费标准80元每门)共需缴费：<font color="red">{{pay}}</font>元</h2>
-                    <label for="email" class="control-label">电子邮箱：(人工审核报名信息的结果及网上支付方式将通过邮件发送，请及时查看)</label>
+                    <h4>如果你已交过费，请不要重复申请</h4>
+                    <label for="email" class="control-label">电子邮箱：(必须填写，人工审核报名信息的结果及网上支付方式将通过邮件发送)</label>
                     <input type="text" name="email" required placeholder="请输入邮箱地址" class="form-control" >
                     <input type="submit" name="payFee" value="申请审核" class="btn btn-danger">
                 {% endif %}

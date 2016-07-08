@@ -34,7 +34,7 @@ class MyListForm(forms.Form):
 
     def renderList(self, request):
         username = request.user.get_username()
-        querySet = Apply.objects.filter(teacher__username=username)
+        querySet = Apply.objects.filter(teacher__username=username).exclude(status='success')
         return render(request, 'ncrePay/myList.html', {'username': username, 'list': querySet})
 
     def get(self, request):
@@ -78,3 +78,11 @@ class MyListForm(forms.Form):
                 app.status = 'reject'
                 app.save()
         return self.renderList(request)
+
+    def getSuccessList(self, request):
+        username = request.user.get_username()
+        querySet = Apply.objects.filter(teacher__username=username, status='success')
+        return render(request, 'ncrePay/myList.html', {'username': username, 'list': querySet, 'success': True})
+
+    def postSuccessList(self, request):
+        self.getSuccessList(request)

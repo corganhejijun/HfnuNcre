@@ -48,3 +48,12 @@ def candidateOk(request):
     if request.method == 'POST':
         form = CandidateOkForm(request.POST)
         return form.post(request)
+
+
+def successList(request):
+    if request.method == 'GET':
+        form = MyListForm(request.GET)
+        return form.getSuccessList(request)
+    if request.method == 'POST':
+        form = MyListForm(request.POST)
+        return form.postSuccessList(request)

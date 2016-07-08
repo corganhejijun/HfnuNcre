@@ -34,16 +34,27 @@ class ApplyForm(forms.Form):
                 return render(request, 'ncrePay/apply.html', {'errorMsg': u'你的支付信息异常，请邮件联系管理员：hfnuncre@foxmail.com'})
             if paidCnt == length:
                 return render(request, 'ncrePay/apply.html', {'successMsg': u'你已缴费成功, 请登录系统查看缴费状态'})
+        appQuery = Apply.objects.filter(candidate__id=querySet[0].id)
         if 'payFee' in request.POST:
-            appQuery = Apply.objects.filter(candidate__id=querySet[0].id)
             if appQuery:
-                return render(request, 'ncrePay/apply.html', {'successMsg': u'你已提交过申请'})
+                app = appQuery[0]
+                app.email = request.POST['email']
+                app.status = 'teacher'
+                app.save()
+                return render(request, 'ncrePay/apply.html', {'successMsg': u'你已提交过申请，我们将重新受理你修改后的信息'})
             app = Apply()
             app.candidate = querySet[0]
             app.email = request.POST['email']
             app.save()
             return render(request, 'ncrePay/apply.html', {'successMsg': u'缴费申请已受理，我们将在三个工作日内处理'})
+        msg = ""
+        if appQuery:
+            app = appQuery[0]
+            if len(app.email) < 2:
+                msg += u"请填写正确的邮箱，否则无法接收我们的消息"
+            if app.status == 'reject':
+                msg += u'你的上一次审核未通过，请根据系统邮件修改后再提交审核'
         return render(request, 'ncrePay/apply.html', {
             'name': name, 'id': personId, 'list': querySet, 'len': length,
-            'pay': 80 * length,
+            'pay': 80 * length, 'errorMsg': msg
         })

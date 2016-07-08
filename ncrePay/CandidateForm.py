@@ -40,6 +40,7 @@ class CandidateForm(forms.Form):
             can['id'] = item.candidate.id
             can['candidateNum'] = item.candidate.candidateNum[-4:]
             can['name'] = item.candidate.name
+            can['email'] = item.email
             canlist.append(can)
         return canlist
 
