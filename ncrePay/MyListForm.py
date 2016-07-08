@@ -24,7 +24,7 @@ class MyListForm(forms.Form):
         canList['candidateNum'] = item.candidateNum
         canList['phone'] = item.phone
         canList['id'] = item.candidateId
-        canList['photo'] = 'http://jdjks.hftc.edu.cn/wp/340051/' + item.photoName + ".jpg"
+        canList['photo'] = 'http://jdjks.hfnu.edu.cn/wp/340051/' + item.photoName + ".jpg"
         querySet = Candidate.objects.filter(candidateId=item.candidateId)
         canList['testName'] = u'报考科目：'
         for item in querySet:
@@ -60,7 +60,7 @@ class MyListForm(forms.Form):
         title = app.candidate.candidateNum[-4:] + app.candidate.name + u" 计算机等级考试报名"
         if 'infoOk' in request.POST:
             text = u'报名信息审核通过，查看支付方式请点击下方网址：\n'\
-                + u'http://jdjks.hftc.edu.cn/ncre/candidateOk/?can=' + str(app.candidate.id) + u'&tea=' + str(app.teacher.id)
+                + u'http://jdjks.hfnu.edu.cn/ncre/candidateOk/?can=' + str(app.candidate.id) + u'&tea=' + str(app.teacher.id)
             sendMail(app.email, title, text)
             app.status = 'success'
             app.save()
