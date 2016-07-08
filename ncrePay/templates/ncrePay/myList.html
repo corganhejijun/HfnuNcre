@@ -15,7 +15,8 @@
             var button = e.relatedTarget;
             var candidateId = button.id;
             var url = location.protocol + "//" + window.location.hostname + ":"
-                      + location.port + "/myList/?target=" + candidateId;
+                      + location.port + "{% url 'myList' %}?target=" + candidateId;
+            document.getElementById('submitUserCheck').name = candidateId;
             $.getJSON(url, {}, function(json){
                 document.getElementById('candidateName').innerHTML = "考生姓名：" + json['name'] + " 报名号：" + json['candidateNum'];
                 document.getElementById('candidatePhone').innerHTML = "电话：" + json['phone'] + " 身份证号码：" + json['id'];
@@ -24,13 +25,20 @@
             });
         });
     });
+    function onInfoOk(){
+        var infoOk = document.getElementById('infoOk')
+        document.getElementById('photoError').disabled = infoOk.checked;
+        document.getElementById('noTel').disabled = infoOk.checked;
+        document.getElementById('otherError').disabled = infoOk.checked;
+    }
     </script>
 </head>
 <body>
     <div class="container" style="max-width: 1000px">
         <h2>当前用户: {{username}}</h2>
-        <a href="ncre/index"><input type="button" class="btn btn-primary navbar-btn pull-right" value="返回" name=""></a>
+        <a href="{% url 'index' %}"><input type="button" class="btn btn-primary navbar-btn pull-right" value="返回" name=""></a>
         <form role="form" class="myList" method="post">
+            {% csrf_token %}
             <table class="table table-borderd table-hover table-striped" id="candidateList">
                 <thead>
                     <tr>
@@ -44,7 +52,7 @@
                         <td class="text-center">{{item.candidate.candidateNum}}</td>
                         <td class="text-center">{{item.candidate.name}}</td>
                         <td class="text-center"><a href="#checkCandidate" data-toggle="modal" 
-                            id='{{item.candidate.id}}' class="userCheckButton btn btn-primary" role="button">查看</a></td>
+                            id='accept{{item.candidate.id}}' class="userCheckButton btn btn-primary" role="button">查看</a></td>
                     {% endfor %}
                 </tbody>
             </table>
@@ -56,7 +64,19 @@
                             <h4 id="candidateName"></h4>
                             <p id="candidatePhone"></p>
                             <p id="candidateTestName"></p>
-                            <img id="candidatePhoto" src="">
+                            <img id="candidatePhoto" src="" height=384 width=288>
+                            <div class="checkbox">
+                                <label><input type="checkbox" name="infoOk" id="infoOk" onClick="onInfoOk()">信息正确</label>
+                            </div>
+                            <div class="checkbox">
+                                <label><input type="checkbox" name="photoError" id="photoError">照片不合格</label>
+                            </div>
+                            <div class="checkbox">
+                                <label><input type="checkbox" name="noTel" id="noTel">缺联系方式</label>
+                            </div>
+                            <label for="otherError" class="control-label">其他错误</label>
+                            <input type="text" class="form-control" id="otherError" name="otherError">
+                            <div class="help-block with-errors"></div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>  
+{% load bootstrap3  %} 
+{% load staticfiles %} 
+<html lang="en">  
+<head>  
+    <meta charset="utf-8">  
+    <title>我的审核</title>  
+    <meta name="description" content="">  
+    <link rel="stylesheet" type="text/css" href="{% static 'ncrePay/bootstrap.min.css' %}" /> 
+    <script type="text/javascript" src="{% static 'ncrePay/jquery-2.2.4.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'ncrePay/bootstrap.min.js' %}"></script>
+    <script type="text/javascript">
+    </script>
+</head>
+<body>
+    <div class="container" style="max-width: 800px">
+    <div class="well">
+    <h1>转账备注请<font color="red">务必</font>填写：<font color="red">{{id}}{{name}}</font></h1>
+    <h2>收费标准（80元/门）转账金额：<font color="red">{{number}}元</font></h2>
+    <img src="http://jdjks.hftc.edu.cn/wp/static/{{alipay}}">
+    </div>
+    </div>
+</body>
+</html>

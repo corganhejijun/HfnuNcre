@@ -22,7 +22,7 @@
     }
     $(document).ready(function(){
         var url = location.protocol + "//" + window.location.hostname + ":"
-                  + location.port + "/index/?target=1";
+                  + location.port + "{% url 'index' %}?target=1";
         $.getJSON(url, {}, function(json){
             for (var i = 0; i < json.length; i++){
                 $('#candidateList').append("<tr id='candidate" + i + "'></tr>")
@@ -35,7 +35,7 @@
 <body>
     <div class="container" style="max-width: 1000px">
         <h2>当前用户：{{username}}</h2>
-        <a href="/ncre/myList"><input type="button" value="我接的单" class="btn btn-success navbar-btn pull-left"></a>
+        <a href="{% url 'myList' %}"><input type="button" value="我接的单" class="btn btn-success navbar-btn pull-left"></a>
         <form role="form" method="post">
             {% csrf_token %}
             <button type="submit" name="logout" class="btn btn-primary navbar-btn pull-right">注销</button>

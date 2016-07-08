@@ -5,9 +5,7 @@ from django.contrib import auth
 from django.http import HttpResponseRedirect, JsonResponse
 from django.core.urlresolvers import reverse
 
-from smtplib import SMTP_SSL
-from email.header import Header
-from email.mime.text import MIMEText
+from SendMail import sendMail
 
 from .models import Apply, Teacher
 
@@ -54,6 +52,7 @@ class CandidateForm(forms.Form):
         return render(request, 'ncrePay/index.html', {'username': request.user.get_username()})
 
     def post(self, request):
+        print 'ok'
         if 'logout' in request.POST:
             return self.logout(request)
         acceptId = -1
@@ -65,45 +64,16 @@ class CandidateForm(forms.Form):
         applyItem = Apply.objects.filter(candidate__id=acceptId)
         teacherName = request.user.get_username()
         try:
+            print teacherName
             teacher = Teacher.objects.get(username=teacherName)
-        except:
+        except Exception, e:
+            print str(e)
             return self.logout(request)
         for item in applyItem:
             item.teacher = teacher
             item.status = "teacher"
-            title = item.candidate.candidateNum[-4:] + item.candidate.name
-            text = u"你的报名信息正由" + teacher.name + u"老师审核中，报名人数较多请耐心等待\n本邮件由系统自动发送，请勿回复"
-            self.sendMail(item.email, title, text)
+            title = item.candidate.candidateNum[-4:] + item.candidate.name + u" 计算机等级考试报名"
+            text = u"你的报名信息正由 " + teacher.name + u" 老师审核中，报名人数较多请耐心等待\n本邮件由系统自动发送，请勿回复"
+            sendMail(item.email, title, text)
             item.save()
         return HttpResponseRedirect(reverse('index'))
-
-    def sendMail(self, dest, title, text):
-        mailInfo = {
-            "from": "JijunHe@qq.com",
-            "to": dest,
-            "hostname": "smtp.qq.com",
-            "username": "JijunHe@qq.com",
-            "password": "sjycupiwuhoyecgc",
-            "mailsubject": title,
-            "mailtext": text,
-            "mailencoding": "utf-8"
-        }
-        try:
-            smtp = SMTP_SSL(mailInfo["hostname"])
-            smtp.set_debuglevel(1)
-            smtp.ehlo(mailInfo["hostname"])
-            smtp.login(mailInfo["username"], mailInfo["password"])
-
-            print 'OK5'
-            msg = MIMEText(mailInfo["mailtext"], 'plain', mailInfo['mailencoding'])
-            print 'OK4'
-            msg["Subject"] = Header(mailInfo["mailsubject"], mailInfo["mailencoding"])
-            print 'OK3'
-            msg["from"] = mailInfo["from"]
-            print 'OK2'
-            msg["to"] = mailInfo["to"]
-            print 'OK1'
-            smtp.sendmail(mailInfo["from"], mailInfo["to"], msg.as_string())
-            smtp.quit()
-        except Exception, e:
-            print str(e)
