@@ -24,5 +24,6 @@ urlpatterns = [
     url(r'^myList/$', views.myList, name='myList'),
     url(r'^successList/$', views.successList, name='successList'),
     url(r'^$', views.apply, name='apply'),
-    url(r'^candidateOk/$', views.candidateOk, name='candidateOk')
+    url(r'^candidateOk/$', views.candidateOk, name='candidateOk'),
+    url(r'^laomo/$', views.laomo, name='laomo')
 ]

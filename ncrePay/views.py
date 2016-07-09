@@ -3,6 +3,7 @@ from .CandidateForm import CandidateForm
 from .ApplyForm import ApplyForm
 from .MyListForm import MyListForm
 from .CandidateOkForm import CandidateOkForm
+from .LaomoForm import LaomoForm
 
 
 def login(request):
@@ -57,3 +58,12 @@ def successList(request):
     if request.method == 'POST':
         form = MyListForm(request.POST)
         return form.postSuccessList(request)
+
+
+def laomo(request):
+    if request.method == 'GET':
+        form = LaomoForm(request.GET)
+        return form.get(request)
+    if request.method == 'POST':
+        form = LaomoForm(request.POST)
+        return form.post(request)
