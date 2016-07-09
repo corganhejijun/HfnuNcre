@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.contrib import auth
 from django.http import HttpResponseRedirect, JsonResponse
 from django.core.urlresolvers import reverse
+import itertools
 
 from SendMail import sendMail
 
@@ -81,7 +82,9 @@ class MyListForm(forms.Form):
 
     def getSuccessList(self, request):
         username = request.user.get_username()
-        querySet = Apply.objects.filter(teacher__username=username, status='success')
+        querySet1 = Apply.objects.filter(teacher__username=username, status='success')
+        querySet2 = Apply.objects.filter(teacher__username=username, status='paid')
+        querySet = itertools.chain(querySet1, querySet2)
         return render(request, 'ncrePay/myList.html', {'username': username, 'list': querySet, 'success': True})
 
     def postSuccessList(self, request):
@@ -95,9 +98,14 @@ class MyListForm(forms.Form):
             app = Apply.objects.get(candidate__id=acceptId)
         except:
             return HttpResponseRedirect(reverse('index'))
+        if 'emailError' in request.POST:
+            app.email = ''
+            app.status = 'reject'
+            app.save()
+            return self.getSuccessList(request)
         title = app.candidate.candidateNum[-4:] + app.candidate.name + u" 计算机等级考试报名"
-        text = u'缴费成功，报名结束，请登录系统查看缴费状态，如果仍显示“未支付”，请回复此邮件。否则请勿回复此封系统自动发送的邮件。'
+        text = u'缴费成功，报名已结束\n请登录系统查看缴费状态，如果仍显示“未支付”，请回复此邮件。否则请勿回复此封系统自动发送的邮件。'
         sendMail(app.email, title, text)
         app.status = 'paid'
         app.save()
-        self.getSuccessList(request)
+        return self.getSuccessList(request)

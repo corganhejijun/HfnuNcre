@@ -24,7 +24,7 @@
             <form class="form" method="post">
                 {% csrf_token %}
                 <label for="inputName" class="control-label">用户名</label>
-                <input type="text" pattern="^[A-z0-9]{6,}$" maxlength="24" class="form-control" id="inputName" 
+                <input type="text" pattern="^[A-z0-9]{4,}$" maxlength="24" class="form-control" id="inputName" 
                     name="username" required placeholder="请输入用户名"
                     {% if messages %}{% for message in messages %}{% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}value={{message}}{% endif %}{% endfor %}{% endif %}>
                 <div class="form-group">

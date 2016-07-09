@@ -32,12 +32,26 @@
             });
         });
     });
+    {% if success %}
+    function onInfoOk(){
+        var emailError = document.getElementById('emailError');
+        if (emailError.checked){
+            document.getElementById('submitSucess').innerText = '确定';
+            document.getElementById('submitSucess').className = 'btn btn-primary';
+        }
+        else{
+            document.getElementById('submitSucess').innerText = '确定支付';
+            document.getElementById('submitSucess').className = 'btn btn-success';
+        }
+    }
+    {% else %}
     function onInfoOk(){
         var infoOk = document.getElementById('infoOk')
         document.getElementById('photoError').disabled = infoOk.checked;
         document.getElementById('noTel').disabled = infoOk.checked;
         document.getElementById('otherError').disabled = infoOk.checked;
     }
+    {% endif %}
     </script>
 </head>
 <body>
@@ -58,7 +72,8 @@
                 </thead>
                 <tbody>
                     {% for item in list %}
-                    <tr{% if item.status == 'reject' %} class="danger" {% endif %}>
+                    <tr{% if item.status == 'reject' %} class="danger" {% endif %}
+                        {% if item.status == 'paid' %} class="success" {% endif %}>
                         <td class="text-center">{{item.candidate.candidateNum}}</td>
                         <td class="text-center">{{item.candidate.name}}</td>
                         <td class="text-center">{{item.status}}</td>
@@ -79,6 +94,11 @@
                             <p id="candidatePhone"></p>
                             <p id="candidateTestName"></p>
                             <img id="candidatePhoto" src="" height=384 width=288>
+                            {% if success %}
+                            <div class="checkbox">
+                                <label><input type="checkbox" name="emailError" id="emailError" onClick="onInfoOk()">邮箱错误</label>
+                            </div>
+                            {% else %}
                             <div class="checkbox">
                                 <label><input type="checkbox" name="infoOk" id="infoOk" onClick="onInfoOk()">信息正确</label>
                             </div>
@@ -91,11 +111,12 @@
                             <label for="otherError" class="control-label">其他错误</label>
                             <input type="text" class="form-control" id="otherError" name="otherError">
                             <div class="help-block with-errors"></div>
+                            {% endif %}
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                         {% if success %}
-                            <button type="submitSucess" type="submit" class="btn btn-success">确定支付</button>
+                            <button id="submitSucess" type="submit" class="btn btn-success">确定支付</button>
                         {% else %}
                             <button id="submitUserCheck" type="submit" class="btn btn-primary">确定</button>
                         {% endif %}
