@@ -7,8 +7,10 @@
     <title>我的审核</title>  
     <meta name="description" content="">  
     <link rel="stylesheet" type="text/css" href="{% static 'ncrePay/bootstrap.min.css' %}" /> 
+    <link rel="stylesheet" type="text/css" href="{% static 'ncrePay/bootstrap-table.min.css' %}" /> 
     <script type="text/javascript" src="{% static 'ncrePay/jquery-2.2.4.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'ncrePay/bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'ncrePay/bootstrap-table.min.js' %}"></script>
     <script type="text/javascript">
     $(document).ready(function(){
         $('#checkCandidate').on('show.bs.modal', function (e) {
@@ -42,19 +44,19 @@
         <a href="{% url 'index' %}"><input type="button" class="btn btn-primary navbar-btn pull-right" value="返回" name=""></a>
         <form role="form" class="myList" method="post">
             {% csrf_token %}
-            <table class="table table-borderd table-hover table-striped" id="candidateList">
+            <table class="table table-borderd table-hover table-striped" id="candidateList" data-toggle="table">
                 <thead>
                     <tr>
-                        <th class="text-center">报名号</th>
+                        <th class="text-center" data-sortable="true">报名号</th>
                         <th class="text-center">姓名</th>
-                        <th class="text-center">状态</th>
+                        <th class="text-center" data-sortable="true">状态</th>
                         <th class="text-center">邮件</th>
                         <th class="text-center">处理</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for item in list %}
-                    <tr>
+                    <tr{% if item.status == 'reject' %} class="danger" {% endif %}>
                         <td class="text-center">{{item.candidate.candidateNum}}</td>
                         <td class="text-center">{{item.candidate.name}}</td>
                         <td class="text-center">{{item.status}}</td>
@@ -88,7 +90,8 @@
                             <input type="text" class="form-control" id="otherError" name="otherError">
                             <div class="help-block with-errors"></div>
                         </div>
-                        {% if not success %}
+                        {% if success %}
+                        {% else %}
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                             <button id="submitUserCheck" type="submit" class="btn btn-primary">确定</button>
