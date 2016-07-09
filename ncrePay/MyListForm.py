@@ -85,4 +85,19 @@ class MyListForm(forms.Form):
         return render(request, 'ncrePay/myList.html', {'username': username, 'list': querySet, 'success': True})
 
     def postSuccessList(self, request):
+        acceptId = -1
+        for n, v in request.POST.iteritems():
+            if n.startswith('accept'):
+                acceptId = int(n[6:])
+        if acceptId == -1:
+            return HttpResponseRedirect(reverse('index'))
+        try:
+            app = Apply.objects.get(candidate__id=acceptId)
+        except:
+            return HttpResponseRedirect(reverse('index'))
+        title = app.candidate.candidateNum[-4:] + app.candidate.name + u" 计算机等级考试报名"
+        text = u'缴费成功，报名结束，请登录系统查看缴费状态，如果仍显示“未支付”，请回复此邮件。否则请勿回复此封系统自动发送的邮件。'
+        sendMail(app.email, title, text)
+        app.status = 'paid'
+        app.save()
         self.getSuccessList(request)
