@@ -25,7 +25,7 @@ class MyListForm(forms.Form):
         canList['candidateNum'] = item.candidateNum
         canList['phone'] = item.phone
         canList['id'] = item.candidateId
-        canList['photo'] = 'http://jdjks.hfnu.edu.cn/wp/340051/' + item.photoName + ".jpg"
+        canList['photo'] = 'http://jdjks.hfnu.edu.cn/CandidatePhoto/46/34/340051/' + item.photoName + ".jpg"
         querySet = Candidate.objects.filter(candidateId=item.candidateId)
         canList['testName'] = u'报考科目：'
         for item in querySet:
@@ -35,7 +35,7 @@ class MyListForm(forms.Form):
 
     def renderList(self, request):
         username = request.user.get_username()
-        querySet = Apply.objects.filter(teacher__username=username).exclude(status='success')
+        querySet = Apply.objects.filter(teacher__username=username).exclude(status='success').exclude(status='paid')
         return render(request, 'ncrePay/myList.html', {'username': username, 'list': querySet})
 
     def get(self, request):
