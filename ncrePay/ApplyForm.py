@@ -52,7 +52,7 @@ class ApplyForm(forms.Form):
         email = ""
         if appQuery:
             app = appQuery[0]
-            if len(app.email) < 2:
+            if '@' not in app.email:
                 msg += u"请填写正确的邮箱，否则无法接收我们的消息 "
             if app.status == 'reject':
                 msg += u'你的上一次审核未通过，请根据系统邮件修改后再提交审核'

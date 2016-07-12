@@ -35,11 +35,13 @@ class CandidateForm(forms.Form):
         i = pageNum * 20
         canlist = []
         for item in querySet:
+            if '@' not in item.email:
+                continue
             i += 1
             if i > 100:
                 break
             can = {}
-            can['id'] = item.candidateNum[-4:]
+            can['id'] = item.candidateNum
             can['candidateNum'] = item.candidateNum
             can['name'] = item.name
             can['email'] = item.email
@@ -59,13 +61,13 @@ class CandidateForm(forms.Form):
             return self.logout(request)
         if not request.user.is_authenticated():
             return self.logout(request)
-        acceptId = -1
+        acceptId = ""
         for n, v in request.POST.iteritems():
             if n.startswith('accept'):
-                acceptId = int(n[6:])
-        if acceptId == -1:
+                acceptId = n[6:]
+        if len(acceptId) == 0:
             return HttpResponseRedirect(reverse('index'))
-        applyItem = Apply.objects.filter(candidateNum=(Apply.idPrefix + n[6:]))
+        applyItem = Apply.objects.filter(candidateNum=acceptId)
         teacherName = request.user.get_username()
         try:
             teacher = Teacher.objects.get(username=teacherName)
