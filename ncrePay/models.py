@@ -33,8 +33,10 @@ class Candidate(models.Model):
 
 
 class Apply(models.Model):
-    candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE)
+    idPrefix = '4634005100'
+    candidateNum = models.CharField(max_length=14)
+    name = models.CharField(max_length=16)
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, null=True)
-    # apply teacher reject success
+    # apply teacher reject success paid
     status = models.CharField(max_length=24, default="apply")
     email = models.CharField(max_length=128)

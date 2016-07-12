@@ -15,12 +15,12 @@ class CandidateOkForm(forms.Form):
         canId = request.GET.get('can')
         teaId = request.GET.get('tea')
         try:
-            app = Apply.objects.get(candidate__id=canId, teacher__id=teaId)
+            app = Apply.objects.get(id=canId, teacher__id=teaId)
         except:
             return HttpResponseRedirect(reverse('apply'))
-        querySet = Candidate.objects.filter(candidateNum=app.candidate.candidateNum)
+        querySet = Candidate.objects.filter(candidateNum=app.candidateNum)
         return render(request, 'ncrePay/candidateOk.html',
-            {'name': app.candidate.name,
-            'id': app.candidate.candidateNum[-4:],
+            {'name': app.name,
+            'id': app.candidateNum[-4:],
             'number': len(querySet) * 80,
             'alipay': app.teacher.alipayQr})

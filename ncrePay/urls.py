@@ -25,5 +25,6 @@ urlpatterns = [
     url(r'^successList/$', views.successList, name='successList'),
     url(r'^$', views.apply, name='apply'),
     url(r'^candidateOk/$', views.candidateOk, name='candidateOk'),
-    url(r'^laomo/$', views.laomo, name='laomo')
+    url(r'^laomo/$', views.laomo, name='laomo'),
+    url(r'^administratorUploadCsv/$', views.upload, name='upload')
 ]

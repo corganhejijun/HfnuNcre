@@ -50,7 +50,7 @@
                     <h2>(缴费标准80元每门)共需缴费：<font color="red">{{pay}}</font>元</h2>
                     <h4>如果你已交过费，请不要重复申请</h4>
                     <label for="email" class="control-label">电子邮箱：(必须填写，人工审核报名信息的结果及网上支付方式将通过邮件发送)</label>
-                    <input type="text" name="email" required placeholder="请输入邮箱地址" class="form-control" >
+                    <input type="text" name="email" required placeholder="请输入邮箱地址" class="form-control" value={{email}}>
                     <input type="submit" name="payFee" value="申请审核" class="btn btn-danger">
                 {% endif %}
             </form>

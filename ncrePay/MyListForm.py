@@ -18,14 +18,15 @@ class MyListForm(forms.Form):
         return HttpResponseRedirect(reverse('login'))
 
     def getCandidate(self, target):
-        querySet = Candidate.objects.filter(id=target)
+        querySet = Candidate.objects.filter(candidateNum=target)
+        print len(querySet)
         item = querySet[0]
         canList = {}
         canList['name'] = item.name
         canList['candidateNum'] = item.candidateNum
         canList['phone'] = item.phone
         canList['id'] = item.candidateId
-        canList['photo'] = 'http://jdjks.hfnu.edu.cn/CandidatePhoto/46/34/340051/' + item.photoName + ".jpg"
+        canList['photo'] = 'http://jdjks.hfnu.edu.cn/CandidatePhoto/46/34/340051/' + item.candidateNum + ".jpg"
         querySet = Candidate.objects.filter(candidateId=item.candidateId)
         canList['testName'] = u'报考科目：'
         for item in querySet:
@@ -44,24 +45,27 @@ class MyListForm(forms.Form):
         target = request.GET.get('target')
         if target:
             # target = accept'xxxx'
-            return JsonResponse(self.getCandidate(int(target[6:])), safe=False)
+            return JsonResponse(self.getCandidate(target[6:]), safe=False)
         return self.renderList(request)
 
     def post(self, request):
-        acceptId = -1
+        if not request.user.is_authenticated():
+            return self.logout(request)
+        acceptId = ""
         for n, v in request.POST.iteritems():
             if n.startswith('accept'):
-                acceptId = int(n[6:])
-        if acceptId == -1:
+                acceptId = n[6:]
+        if len(acceptId) == 0:
             return HttpResponseRedirect(reverse('index'))
         try:
-            app = Apply.objects.get(candidate__id=acceptId)
+            app = Apply.objects.get(candidateNum=acceptId)
         except:
             return HttpResponseRedirect(reverse('index'))
-        title = app.candidate.candidateNum[-4:] + app.candidate.name + u" 计算机等级考试报名"
+        print 'ok'
+        title = app.candidateNum[-4:] + app.name + u" 计算机等级考试报名"
         if 'infoOk' in request.POST:
             text = u'报名信息审核通过，查看支付方式请点击下方网址：\n'\
-                + u'http://jdjks.hfnu.edu.cn/ncre/candidateOk/?can=' + str(app.candidate.id) + u'&tea=' + str(app.teacher.id)
+                + u'http://jdjks.hfnu.edu.cn/ncre/candidateOk/?can=' + str(app.id) + u'&tea=' + str(app.teacher.id)
             sendMail(app.email, title, text)
             app.status = 'success'
             app.save()
@@ -88,14 +92,14 @@ class MyListForm(forms.Form):
         return render(request, 'ncrePay/myList.html', {'username': username, 'list': querySet, 'success': True})
 
     def postSuccessList(self, request):
-        acceptId = -1
+        acceptId = ""
         for n, v in request.POST.iteritems():
             if n.startswith('accept'):
-                acceptId = int(n[6:])
-        if acceptId == -1:
+                acceptId = n[6:]
+        if len(acceptId) == 0:
             return HttpResponseRedirect(reverse('index'))
         try:
-            app = Apply.objects.get(candidate__id=acceptId)
+            app = Apply.objects.get(candidateNum=acceptId)
         except:
             return HttpResponseRedirect(reverse('index'))
         if 'emailError' in request.POST:
@@ -103,7 +107,7 @@ class MyListForm(forms.Form):
             app.status = 'reject'
             app.save()
             return self.getSuccessList(request)
-        title = app.candidate.candidateNum[-4:] + app.candidate.name + u" 计算机等级考试报名"
+        title = app.candidateNum[-4:] + app.name + u" 计算机等级考试报名"
         text = u'缴费成功，报名已结束\n请登录系统查看缴费状态，如果仍显示“未支付”，请回复此邮件。否则请勿回复此封系统自动发送的邮件。'
         sendMail(app.email, title, text)
         app.status = 'paid'

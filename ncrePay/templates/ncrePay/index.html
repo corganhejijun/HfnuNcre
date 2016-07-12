@@ -38,6 +38,7 @@
         <h2>当前用户：{{username}}</h2>
         <a href="{% url 'myList' %}"><input type="button" value="我接的单" class="btn btn-success navbar-btn pull-left"></a>
         <a href="{% url 'successList' %}"><input type="button" value="我处理过的单" class="btn btn-primary navbar-btn pull-left" style="margin: 8px 0px 0px 10px"></a>
+        <a href="{% url 'laomo' %}"><input type="button" value="劳模榜" class="btn btn-danger navbar-btn pull-left" style="margin: 8px 0px 0px 10px"></a>
         <form role="form" method="post">
             {% csrf_token %}
             <button type="submit" name="logout" class="btn btn-primary navbar-btn pull-right">注销</button>

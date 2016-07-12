@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse
 
 from SendMail import sendMail
 
-from .models import Apply, Teacher
+from .models import Apply, Teacher, Candidate
 
 
 class CandidateForm(forms.Form):
@@ -36,10 +36,12 @@ class CandidateForm(forms.Form):
         canlist = []
         for item in querySet:
             i += 1
+            if i > 100:
+                break
             can = {}
-            can['id'] = item.candidate.id
-            can['candidateNum'] = item.candidate.candidateNum[-4:]
-            can['name'] = item.candidate.name
+            can['id'] = item.candidateNum[-4:]
+            can['candidateNum'] = item.candidateNum
+            can['name'] = item.name
             can['email'] = item.email
             canlist.append(can)
         return canlist
@@ -53,8 +55,9 @@ class CandidateForm(forms.Form):
         return render(request, 'ncrePay/index.html', {'username': request.user.get_username()})
 
     def post(self, request):
-        print 'ok'
         if 'logout' in request.POST:
+            return self.logout(request)
+        if not request.user.is_authenticated():
             return self.logout(request)
         acceptId = -1
         for n, v in request.POST.iteritems():
@@ -62,10 +65,9 @@ class CandidateForm(forms.Form):
                 acceptId = int(n[6:])
         if acceptId == -1:
             return HttpResponseRedirect(reverse('index'))
-        applyItem = Apply.objects.filter(candidate__id=acceptId)
+        applyItem = Apply.objects.filter(candidateNum=(Apply.idPrefix + n[6:]))
         teacherName = request.user.get_username()
         try:
-            print teacherName
             teacher = Teacher.objects.get(username=teacherName)
         except Exception, e:
             print str(e)
@@ -73,7 +75,7 @@ class CandidateForm(forms.Form):
         for item in applyItem:
             item.teacher = teacher
             item.status = "teacher"
-            title = item.candidate.candidateNum[-4:] + item.candidate.name + u" 计算机等级考试报名"
+            title = item.candidateNum[-4:] + item.name + u" 计算机等级考试报名"
             text = u"你的报名信息正由 " + teacher.name + u" 老师审核中，报名人数较多请耐心等待\n本邮件由系统自动发送，请勿回复"
             sendMail(item.email, title, text)
             item.save()

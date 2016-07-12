@@ -4,6 +4,7 @@ from .ApplyForm import ApplyForm
 from .MyListForm import MyListForm
 from .CandidateOkForm import CandidateOkForm
 from .LaomoForm import LaomoForm
+from .UploadForm import UploadForm
 
 
 def login(request):
@@ -66,4 +67,13 @@ def laomo(request):
         return form.get(request)
     if request.method == 'POST':
         form = LaomoForm(request.POST)
+        return form.post(request)
+
+
+def upload(request):
+    if request.method == 'GET':
+        form = UploadForm(request.GET)
+        return form.get(request)
+    if request.method == 'POST':
+        form = UploadForm(request.POST, request.FILES)
         return form.post(request)

@@ -1,0 +1,25 @@
+<!DOCTYPE html>  
+{% load bootstrap3  %} 
+{% load staticfiles %} 
+<html lang="en">  
+<head>  
+    <meta charset="utf-8">  
+    <title>上传</title>  
+    <meta name="description" content="">  
+    <link rel="stylesheet" type="text/css" href="{% static 'ncrePay/bootstrap.min.css' %}" /> 
+    <script type="text/javascript" src="{% static 'ncrePay/jquery-2.2.4.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'ncrePay/bootstrap.min.js' %}"></script>
+    <script type="text/javascript">
+    </script>
+</head>
+<body>
+    <form enctype="multipart/form-data" class="form" method="post">
+        {% csrf_token %}
+        {% if form %}
+        {{ form.uploadFile.errors }}
+        {% bootstrap_field form.uploadFile %}
+        {% endif %}
+        <input type="submit" value="上传" class="btn btn-primary">  
+    </form>
+</body>
+</html>

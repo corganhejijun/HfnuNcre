@@ -74,12 +74,12 @@
                     {% for item in list %}
                     <tr{% if item.status == 'reject' %} class="danger" {% endif %}
                         {% if item.status == 'paid' %} class="success" {% endif %}>
-                        <td class="text-center">{{item.candidate.candidateNum}}</td>
-                        <td class="text-center">{{item.candidate.name}}</td>
+                        <td class="text-center">{{item.candidateNum}}</td>
+                        <td class="text-center">{{item.name}}</td>
                         <td class="text-center">{{item.status}}</td>
                         <td class="text-center">{{item.email}}</td>
                         <td class="text-center"><a href="#checkCandidate" data-toggle="modal" 
-                            id='accept{{item.candidate.id}}' class="userCheckButton btn btn-primary" role="button">查看</a>
+                            id='accept{{item.candidateNum}}' class="userCheckButton btn btn-primary" role="button">查看</a>
                         </td>
                     </tr>
                     {% endfor %}
