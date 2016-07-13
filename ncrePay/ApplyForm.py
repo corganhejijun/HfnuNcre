@@ -39,7 +39,8 @@ class ApplyForm(forms.Form):
             if appQuery:
                 app = appQuery[0]
                 app.email = request.POST['email']
-                app.status = 'teacher'
+                if app.status == 'reject':
+                    app.status = 'teacher'
                 app.save()
                 return render(request, 'ncrePay/apply.html', {'successMsg': u'你已提交过申请，如果邮件地址有误，请重新查询并修改，我们将重新受理你修改后的信息'})
             app = Apply()

@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse
 
 from SendMail import sendMail
 
-from .models import Apply, Teacher, Candidate
+from .models import Apply, Teacher
 
 
 class CandidateForm(forms.Form):
