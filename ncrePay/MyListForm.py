@@ -65,7 +65,7 @@ class MyListForm(forms.Form):
         if 'infoOk' in request.POST:
             text = u'报名信息审核通过，查看支付方式请点击下方网址：\n'\
                 + u'http://jdjks.hfnu.edu.cn/ncre/candidateOk/?can=' + str(app.id) + u'&tea=' + str(app.teacher.id)
-            send_mail(title, text, 'JijunHe@qq.com', app.email, fail_silently=False)
+            send_mail(title, text, 'JijunHe@qq.com', [app.email], fail_silently=False)
             app.status = 'success'
             app.save()
         else:
@@ -78,7 +78,7 @@ class MyListForm(forms.Form):
                 text += request.POST['otherError'] + '\n'
             if len(text) > 1:
                 text = u'报名信息审核不合格，存在以下问题：\n' + text + u'请修改后重新提交审核'
-                send_mail(title, text, 'JijunHe@qq.com', app.email, fail_silently=False)
+                send_mail(title, text, 'JijunHe@qq.com', [app.email], fail_silently=False)
                 app.status = 'reject'
                 app.save()
         return self.renderList(request)
@@ -108,7 +108,7 @@ class MyListForm(forms.Form):
             return self.getSuccessList(request)
         title = app.candidateNum[-4:] + app.name + u" 计算机等级考试报名"
         text = u'缴费成功，报名已结束\n请登录系统查看缴费状态，如果仍显示“未支付”，请回复此邮件。否则请勿回复此封系统自动发送的邮件。'
-        send_mail(title, text, 'JijunHe@qq.com', app.email, fail_silently=False)
+        send_mail(title, text, 'JijunHe@qq.com', [app.email], fail_silently=False)
         app.status = 'paid'
         app.save()
         return self.getSuccessList(request)
