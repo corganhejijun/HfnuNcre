@@ -4,8 +4,7 @@ from django.shortcuts import render
 from django.contrib import auth
 from django.http import HttpResponseRedirect, JsonResponse
 from django.core.urlresolvers import reverse
-
-from SendMail import sendMail
+from django.core.mail import send_mail
 
 from .models import Apply, Teacher
 
@@ -79,6 +78,6 @@ class CandidateForm(forms.Form):
             item.status = "teacher"
             title = item.candidateNum[-4:] + item.name + u" 计算机等级考试报名"
             text = u"你的报名信息正由 " + teacher.name + u" 老师审核中，报名人数较多请耐心等待\n本邮件由系统自动发送，请勿回复"
-            sendMail(item.email, title, text)
+            send_mail(title, text, 'JijunHe@qq.com', item.email, fail_silently=False)
             item.save()
         return HttpResponseRedirect(reverse('index'))
